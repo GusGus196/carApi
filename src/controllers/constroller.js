@@ -8,6 +8,9 @@ export const listCarros = async(req, res) => {
 
 export const agregarCarro = async(req, res) => {
     const data = req.body;
+    if(!data.placa){
+        return res.status(500).json({message: "Falta información"});
+    }
     const carro = new Carro(data.placa, data.marca, data.modelo);
     console.log(data);
     inventario.agregar(carro);
