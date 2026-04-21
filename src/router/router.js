@@ -1,12 +1,13 @@
 import express from 'express'
-import { listCarros, carro, delCarro, agregarCarro} from "../controllers/constroller.js"
+import { listarAlumnos, alumno, delAlumno, agregarAlumno, editarAlumno} from "../controllers/constroller.js"
 
 const router = express.Router();
 
-router.get('/vehiculos', listCarros);
-router.post('/vehiculos', agregarCarro);
-router.get('/vehiculos/:id', carro);
-router.delete('/vehiculos/:id', delCarro);
+router.get('/alumnos', listarAlumnos);
+router.get('/alumnos/:numcuenta', alumno);
+router.post('/alumnos', agregarAlumno);
+router.delete('/alumnos/:numcuenta', delAlumno);
+router.put('/alumnos/:numcuenta', editarAlumno);
 
 
 export default router

@@ -1,34 +1,53 @@
-import { inventario } from "../carros.js";
-import { Carro } from "../carros.js";
+import { Alumno, grupo } from "../alumnos.js";
 
-export const listCarros = async(req, res) => {
-    console.log(inventario.carros);
-    res.json(inventario.carros);
+export const listarAlumnos = async(req, res) => {
+    console.log(grupo.alumnos);
+    res.json(grupo.alumnos);
 };
 
-export const agregarCarro = async(req, res) => {
+export const agregarAlumno = async(req, res) => {
     const data = req.body;
-    if(!data.placa){
+    if(!data.numcuenta){
         return res.status(500).json({message: "Falta información"});
     }
-    const carro = new Carro(data.placa, data.marca, data.modelo);
+    
+    const alumno = new Alumno(data.numcuenta, data.nombre, data.semestre);
     console.log(data);
-    inventario.agregar(carro);
-    res.status(201).json({
-        success: true,
-        message: "Carro agregado",
-        data
-    }); 
+    let validacion = grupo.agregar(alumno);
+
+    if(validacion != -1){
+        res.status(201).json({
+            message: "alumno agregado",
+            data
+        }); 
+    } else{
+        res.status(408).json({
+            message: "Numero de cuenta repetido"
+        }); 
+    }
 };
 
-export const carro = async(req, res) => {
-    const { id } = req.params;
-    const carro = inventario.buscar(id);
-    res.json(carro);
+export const alumno = async(req, res) => {
+    const { numcuenta } = req.params;
+    const alumno = grupo.buscar(numcuenta);
+    res.json(alumno);
 };
 
-export const delCarro = async(req, res) => {
-    const { id } = req.params;
-    inventario.eliminar(id);
-    return res.status(201).json(inventario.carros);
+export const delAlumno = async(req, res) => {
+    const { numcuenta } = req.params;
+    grupo.eliminar(numcuenta);
+    return res.status(201).json(grupo.alumnos);
+};
+
+export const editarAlumno = async (req, res) => {
+    const { numcuenta } = req.params;
+    const data = req.body;
+    const actualizado = grupo.editarAlumno({
+        numcuenta,
+        ...data
+    });
+    if (!actualizado) {
+        return res.status(404).json({ message: "Alumno no encontrado" });
+    }
+    return res.status(200).json(actualizado);
 };
